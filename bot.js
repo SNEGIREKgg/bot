@@ -21,36 +21,40 @@ bot.onText(/🎁 Ежедневный бонус|\/daily/, (msg) => userCommands
 // Админские команды
 bot.onText(/➕ Добавить задание|\/addtask/, (msg) => adminCommands.handleAddTask(bot, msg));
 bot.onText(/➖ Удалить задание|\/removetask/, (msg) => adminCommands.handleRemoveTask(bot, msg));
-bot.onText(/📢 Добавить канал|\/addchannel/, (msg) => adminCommands.handleAddRequiredChannel(bot, msg));
-bot.onText(/🔇 Удалить канал|\/removechannel/, (msg) => adminCommands.handleRemoveRequiredChannel(bot, msg));
+bot.onText(/📢 Добавить канал|\/addchannel/, (msg) =>
+  adminCommands.handleAddRequiredChannel(bot, msg),
+);
+bot.onText(/🔇 Удалить канал|\/removechannel/, (msg) =>
+  adminCommands.handleRemoveRequiredChannel(bot, msg),
+);
 bot.onText(/📊 Статистика|\/adminstats/, (msg) => adminCommands.handleAdminStats(bot, msg));
 
-bot.on('callback_query', async(callbackQuery) => {
-    const action = callbackQuery.data.split('_')[0];
-    switch (action) {
-        case 'task':
-            await commands.handleTaskDetails(bot, callbackQuery);
-            break;
-        case 'check':
-            await commands.handleCheckTask(bot, callbackQuery);
-            break;
-        case 'back':
-            if (callbackQuery.data === 'back_to_tasks') {
-                await commands.handleTasks(bot, callbackQuery.message);
-            }
-            break;
-    }
+bot.on('callback_query', async (callbackQuery) => {
+  const action = callbackQuery.data.split('_')[0];
+  switch (action) {
+    case 'task':
+      await commands.handleTaskDetails(bot, callbackQuery);
+      break;
+    case 'check':
+      await commands.handleCheckTask(bot, callbackQuery);
+      break;
+    case 'back':
+      if (callbackQuery.data === 'back_to_tasks') {
+        await commands.handleTasks(bot, callbackQuery.message);
+      }
+      break;
+  }
 });
 
-bot.on('message', async(msg) => {
-    const chatId = msg.chat.id;
-    if (config.adminIds.includes(chatId)) {
-        const adminKeyboard = utils.getAdminKeyboard();
-        await bot.sendMessage(chatId, 'Выберите действие:', { reply_markup: adminKeyboard });
-    } else {
-        const userKeyboard = utils.getMainKeyboard();
-        await bot.sendMessage(chatId, 'Выберите действие:', { reply_markup: userKeyboard });
-    }
+bot.on('message', async (msg) => {
+  const chatId = msg.chat.id;
+  if (config.adminIds.includes(chatId)) {
+    const adminKeyboard = utils.getAdminKeyboard();
+    await bot.sendMessage(chatId, 'Выберите действие:', { reply_markup: adminKeyboard });
+  } else {
+    const userKeyboard = utils.getMainKeyboard();
+    await bot.sendMessage(chatId, 'Выберите действие:', { reply_markup: userKeyboard });
+  }
 });
 
-console.log('Бот запущен...');
+console.log('Бот запущен...!');
